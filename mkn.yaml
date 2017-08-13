@@ -1,0 +1,41 @@
+
+
+name: hpx
+
+property:
+    org.boost.version: master
+    hwloc.version: master
+    hwloc.location: ${MKN_HOME}/app/hwloc/${hwloc.version}
+
+parent: lib
+
+profile:
+  - name: all
+    self: lib ag
+
+  - name: inc
+    self: dep
+    inc: ./inst/include
+
+  - name: lib
+    parent: inc
+    path: ./inst/lib
+    lib: hpx
+
+  - name: ag
+    parent: lib
+    lib: hpx_ag
+
+  - name: iostreams
+    parent: lib
+    lib: hpx_iostreams
+
+  - name: dep
+    dep:
+      - name: hwloc
+        version: ${hwloc.version}
+        scm: https://github.com/mkn-nix/hwloc
+        local: ${MKN_HOME}/app/hwloc/${hwloc.version}
+      - name: org.boost
+        version: ${org.boost.version}
+        profile: atomic filesystem program_options regex
