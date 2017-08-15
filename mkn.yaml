@@ -4,8 +4,7 @@ name: hpx
 
 property:
     org.boost.version: master
-    hwloc.version: master
-    hwloc.location: ${MKN_HOME}/app/hwloc/${hwloc.version}
+    ompi.hwloc.version: master
 
 parent: lib
 
@@ -32,10 +31,9 @@ profile:
 
   - name: dep
     dep:
-      - name: hwloc
-        version: ${hwloc.version}
-        scm: https://github.com/mkn-nix/hwloc
-        local: ${MKN_HOME}/app/hwloc/${hwloc.version}
+      - name: ompi.hwloc
+        version: ${ompi.hwloc.version}
+        scm: https://github.com/mkn-nix/ompi.hwloc
       - name: org.boost
         version: ${org.boost.version}
         profile: atomic filesystem program_options regex
