@@ -24,7 +24,7 @@ MKN_REPO="$(mkn -G MKN_REPO)"
 VER_BOOST="$(mkn -G org.boost.version)"
 VER_HWLOC="$(mkn -G ompi.hwloc.version)"
 
-THREADS="$(nproc --all)"
+[ -z "$MKN_MAKE_THREADS" ] && MKN_MAKE_THREADS="$(nproc --all)"
 
 [ ! -d "$CWD/hpx" ] && git clone $GIT_OPT $GIT_URL -b $GIT_BNC hpx --recursive
 
@@ -32,16 +32,20 @@ KLOG=3 mkn clean build -dtSa "${MKN_CXXR[@]}"
 
 mkdir -p $CWD/hpx/build
 
+grep aarch64 <<< $(uname -a) && MKN_CMAKE_CONFIG="$MKN_CMAKE_CONFIG -DHPX_WITH_GENERIC_CONTEXT_COROUTINES=ON"
+
 pushd $CWD/hpx/build
 read -r -d '' CMAKE <<- EOM || echo "running cmake"
-    cmake -DBOOST_ROOT=$MKN_REPO/org/boost/$VER_BOOST/b 
+    cmake -DBOOST_ROOT=$MKN_REPO/org/boost/$VER_BOOST/b
           -DHWLOC_ROOT=$MKN_REPO/ompi/hwloc/$VER_HWLOC/inst
-          -DHPX_WITH_MALLOC=$HPX_WITH_MALLOC 
-          -DCMAKE_INSTALL_PREFIX=$CWD/inst 
-          -DCMAKE_BUILD_TYPE=Release ..
+          -DHPX_WITH_MALLOC=$HPX_WITH_MALLOC
+          -DCMAKE_INSTALL_PREFIX=$CWD/inst
+          -DCMAKE_BUILD_TYPE=Release
+          $MKN_CMAKE_CONFIG
+          ..
 EOM
 $CMAKE
-make -j$THREADS
+make -j$MKN_MAKE_THREADS VERBOSE=1
 make install
 popd
 
