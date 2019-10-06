@@ -50,6 +50,6 @@ make install
 popd
 
 echo "Running test"
-$CWD/inst/bin/hello_world
+$CWD/inst/bin/hello_world_1
 echo "Finished successfully"
 exit 0

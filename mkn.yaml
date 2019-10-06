@@ -3,7 +3,7 @@
 name: hpx
 
 property:
-    org.boost.version: master
+    org.boost.version: 1.71
     ompi.hwloc.version: master
 
 parent: lib
